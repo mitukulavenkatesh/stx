@@ -1,0 +1,110 @@
+<div id="wrapper_setup_new">
+    <app-header [newMenu]="'noNav'"></app-header>
+    <section id="inner_cont">
+        <div class="container form_cont">
+            <div class="row mt-20">
+                <div class="col-md-4 col-sm-4 text-right res-tleft">
+                    <label>{{'COMMON.START' | translate }}</label>
+                </div>
+                <div class="col-md-7 col-sm-8">
+                    <div class="row">
+                        <div class="col-md-3 col-sm-3">
+                            <select class="width-align" [(ngModel)]="startmonth">
+                                <option *ngFor='let months of monthsData' value="{{months.value}}">{{ months.option }}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 col-sm-3">
+                            <select class="width-align" [(ngModel)]="startyears">
+                                <option *ngFor='let year of yearsDataList' value="{{ year.option }}">{{ year.option }}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-20">
+                <div class="col-md-4 col-sm-4 text-right res-tleft">
+                    <label>{{'COMMON.END' | translate }}</label>
+                </div>
+                <div class="col-md-7 col-sm-8">
+                    <div class="row">
+                        <div class="col-md-3 col-sm-3">
+                            <select class="width-align" [(ngModel)]="endmonth">
+                                <option *ngFor='let months of monthsData' value="{{months.value}}">{{ months.option }}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 col-sm-3">
+                            <select class="width-align" [(ngModel)]="endyears">
+                                <option *ngFor='let year of yearsDataList' value="{{ year.option }}">{{ year.option }}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-20">
+                <div class="col-md-4 col-sm-4 text-right res-tleft">
+                    <label>{{'WORKER_GOALS.GOALS_TO_CALCULATE' | translate }}</label>
+                </div>
+                <div class="col-md-7 col-sm-8">
+                    <select [(ngModel)]="workerGoal">
+                        <option value="">All</option>
+                        <option *ngFor='let goal of workerGoalsData' value="{{goal.Id}}">{{ goal.Name }}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mt-20">
+                <div class="col-md-4 col-sm-4 text-right res-tleft">
+                    <label>{{'COMMON.WORKER' | translate }}</label>
+                </div>
+                <div class="col-md-7 col-sm-8">
+                    <select [(ngModel)]="workerid">
+                        <option value="">Select Worker</option>
+                        <option *ngFor='let data1 of dataList' value="{{data1.Id}}">{{ data1.FullName }}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mt-20">
+                <div class="col-md-5 col-sm-4 text-right res-tleft">
+                    &nbsp;
+                </div>
+                <div class="col-md-7 col-sm-8">
+                    <button type="button" (click)="generateReport()" class="btn btn-primary">{{'BUTTON.DISPLAY_GOAL_RESULT'
+                        | translate }}</button>
+                </div>
+            </div>
+            <div class="row mt-20 res-mt-15 ml-5" *ngIf="itemsDisplay">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered">
+                            <thead>
+                                <tr class="white">
+                                    <th>{{'WORKER_GOALS.GOAL_NAME' | translate }}</th>
+                                    <th> {{'COMMON.START_DATE' | translate }}</th>
+                                    <th>{{'COMMON.END_DATE' | translate }}</th>
+                                    <th> {{'SETUP_WORKERS_DETAILS.GOAL_TARGET' | translate }}</th>
+                                    <th> {{'SETUP_WORKERS_DETAILS.CALCULATED_GOAL' | translate }}</th>
+                                    <th>{{'SETUP_WORKERS_DETAILS.PERCENTAGE_OF_GOAL' | translate }}</th>
+                                    <th>&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let items of workerGoalData;let i='index'">
+                                    <td>{{items.Name}}</td>
+                                    <td>{{items.startDate | date:'MM/dd/yyyy'}}</td>
+                                    <td>{{items.endDate | date:'MM/dd/yyyy'}}</td>
+                                    <td>{{items.target | number: '1.2-4'}}</td>
+                                    <td>{{calculatedGoal[i] | number:'2.2-4'}}</td>
+                                    <td>{{percentOfGoal[i]}}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary" (click)="showPercentage(items,i)">{{'BUTTON.UPDATE_PERCENTAGE_OF_GOALS'
+                                            | translate }}</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <app-rightbar></app-rightbar>
+</div>

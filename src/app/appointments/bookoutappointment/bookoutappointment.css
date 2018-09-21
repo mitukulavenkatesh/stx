@@ -1,0 +1,40 @@
+#inner_cont {
+    margin-right:10%;
+    color: white;
+}
+.form_cont input[type=text], .form-control, .form_cont input[type=email], .form_cont input[type=number], .form_cont input[type=password], .form_cont select {
+    color: white;
+}
+.form_cont input[type=text]:focus, .form-control, .form_cont input[type=email]:focus, .form_cont input[type=number]:focus, .form_cont input[type=password]:focus {
+    color: black;
+}
+
+ @media (min-width: 992px) {
+    .col-sm-4 {
+        margin-right: -16px;
+    }
+    .align-width {
+        width: 58%;
+    }
+}
+@media (device-width: 768px) {
+    .col-sm-4 {
+        width: 33.33333333%;
+    }
+    .align-width {
+        width: 82%;
+        margin-left: -31%;
+    }
+    .align-width-i {
+        width: 60%;
+    }
+    em {
+        margin-left: -35px;
+    }
+}
+@media (device-width: 1024px) {
+    .align-width {
+        width: 72%;
+        margin-left: -10%;
+    }
+}

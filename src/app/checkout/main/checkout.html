@@ -1,0 +1,193 @@
+<div id="wrapper_setup_new">
+    <app-header [newMenu]="'noNav'"></app-header>
+    <section id="inner_cont">
+        <div class="container form_cont">
+            <div class="col-md-3 apointmnet-left">
+                <div class="row mt-20">
+                    <div class="col-md-12 appointment-button-sidenav">
+                        <div *ngIf="decodedToken['Tickets'] && decodedToken['Tickets'][7]['allowAcces']">
+                            <a class="btn btn-default mb-5 chkout-button" [routerLink]="['/checkout/newticket']">
+                                <i class="fa fa-plus-circle" aria-hidden="true"></i> New Ticket</a>
+                            <br />
+                        </div>
+                        <div *ngIf="decodedToken['Tickets'] && decodedToken['Tickets'][4]['allowAcces']">
+                            <a class="btn btn-default mb-5 chkout-button" (click)="showMembershipsModal()">
+                                <i class="fa fa-plus-circle" aria-hidden="true"></i> Memberships</a>
+                            <br />
+                        </div>
+                        <div *ngIf="decodedToken['Tickets'] && decodedToken['Tickets'][5]['allowAcces']">
+                            <a class="btn btn-default mb-5 chkout-button" (click)="showRefundsModal()">
+                                <i class="fa fa-plus-circle" aria-hidden="true"></i> Refunds</a>
+                            <br />
+                        </div>
+                        <div>
+                            <a class="btn btn-default mb-5 chkout-button" [routerLink]="['/checkout/refund/noclient']">
+                                <i class="fa fa-plus-circle" aria-hidden="true"></i> Refunds NO CLIENT</a>
+                            <br />
+                        </div>
+                        <div *ngIf="decodedToken['Tickets'] && decodedToken['Tickets'][0]['allowAcces']">
+                            <a class="btn btn-default mb-5 chkout-button" [routerLink]="['/cashinout']">
+                                <img width="12px" src="assets/images/plusminus.png"> Cash In / Out</a>
+                            <br />
+                        </div>
+                        <div *ngIf="decodedToken['Tickets'] && decodedToken['Tickets'][6]['allowAcces']">
+                            <a class="btn btn-default mb-5 chkout-button" [routerLink]="['/checkout/cashcounting']">
+                                <img width="12px" src="assets/images/plusminus.png"> Cash Counting</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-9 apointmnet-right">
+
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered">
+                        <thead>
+                            <tr>
+                                <th *ngIf='apptId' class="thcss">Include</th>
+                                <th class="thcss">Ticket #</th>
+                                <th class="thcss">Client</th>
+                                <th class="thcss">Services</th>
+                                <th *ngIf='apptId' class="thcss">Balance Due</th>
+                                <th class="thcss">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let checkoutlist of checkOutList; let i='index'">
+                                <td *ngIf='apptId'>
+                                    <ng-container *ngIf="checkoutlist.appId!==apptId">
+                                        <input type="checkbox" [(ngModel)]="checkoutlist.include">
+                                    </ng-container>
+                                </td>
+                                <td class="tbl-txt" [routerLink]="['/checkout/' + checkoutlist.appId]">{{checkoutlist.ticketNumber}}</td>
+                                <td *ngIf="checkoutlist.clientId==null">NO CLIENT</td>
+                                <td class="tbl-txt" *ngIf="checkoutlist.clientId!=null" [routerLink]="['/client/edit/' + checkoutlist.clientId]" [queryParams]="{ actionMethod: 'checkoutList' }">{{checkoutlist.clientName}}</td>
+                                <td>{{checkoutlist.serviceName}}</td>
+                                <td *ngIf='apptId'>{{checkoutlist.balancedue | number: '1.2-4'}}</td>
+                                <td>{{checkoutlist.disaplayDate[0]}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+                <div class="row" *ngIf="apptId">
+                    <div class="text-center mt-40">
+                        <button class="save-btn" (click)="addTickets()" type="button">Include Unpaid Tickets</button>
+                        <button class="cancel-btn" type="button" (click)='cancelIncludeTicket()'>{{'BUTTON.CANCEL' | translate}}</button>
+                        <div class="text-center">
+                            *Once a ticket with an unpaid balance has been included, the ticket being included can no longer be edited.
+                        </div>
+                    </div>
+                </div>
+                <!-- memberships modal starts -->
+                <div bsModal #membershipsModal="bs-modal" class="modal expressBooking bluemodal small-modal" role="dialog" aria-labelledby="myLargeModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-content" style="margin: auto;">
+                        <span id="cancel1" (click)="cancelMembershipsModal()" class="close close-list">&times;</span>
+                        <div class="modal-dialog ">
+                            <div class="modal-body">
+                                <div class="clearfix">
+                                    <div class="row mt-20 clearfix">
+
+                                        <div class="col-md-12 col-sm-12 mb-10">
+                                            <div class="staff-search staff125">
+                                                <div class="input-group">
+                                                    <input type="text" placeholder="Name, Phone, Email" [formControl]="searchField" [(ngModel)]="searchKey" (input)="searchClients()"
+                                                        autofocus class="form-control" id="FindApptSearchKeys" style="background: none !important;">
+                                                    <p style="color:red;text-align: center;">{{noResult}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <perfect-scrollbar style="max-height:300px;">
+                                        <div class="staff-search-details mt-20">
+                                            <div class="staff-search-details-in">
+                                                <div class="staff-search-list" *ngFor="let client of DataObj">
+                                                    <div class="staff-search-list-img" *ngIf="(client.image && client.image !== '')">
+                                                        <img src="{{apiEndPoints | translate}}/{{client.image}}" width="61" onerror="this.onerror=null;this.src='assets/images/user-icon.png';"
+                                                            height="61" alt="Profile">
+                                                    </div>
+                                                    <div class="staff-search-list-img" *ngIf="(client.image === null || client.image === '' || client.image === undefined)">
+                                                        <div class="appnt-pro-letter" style="width:61px;height:61px;line-height: 57px;">
+                                                            <strong> {{ client.FirstName[0].toUpperCase() }} </strong>
+                                                        </div>
+                                                    </div>
+                                                    <div class="staff-search-list-name" [routerLink]="['/membershipedit/' + client.Id]">
+                                                        <span id="findApptClear">{{client.FirstName}} &nbsp; {{client.LastName}}</span>
+                                                        <span *ngIf="hideClientInfo === 0">
+                                                            <div class="staff-search-list-mobile" *ngIf="!client.Phone || !client.MobilePhone">{{client.Phone}}
+                                                                | {{client.MobilePhone}}</div>
+                                                            <div class="staff-search-list-email">{{client.Email}}</div>
+                                                        </span>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </perfect-scrollbar>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- memberships modal ends -->
+                <!-- refunds modal starts -->
+                <div bsModal #refundsModal="bs-modal" class="modal expressBooking bluemodal small-modal" role="dialog" aria-labelledby="myLargeModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-content" style="margin: auto;">
+                        <span id="cancel1" (click)="cancelModal()" class="close close-list">&times;</span>
+                        <div class="modal-dialog ">
+                            <div class="modal-body">
+                                <div class="clearfix">
+                                    <div class="row mt-20 clearfix">
+
+                                        <div class="col-md-12 col-sm-12 mb-10">
+                                            <div class="staff-search staff125">
+                                                <div class="input-group">
+                                                    <input type="text" placeholder="Name, Phone, Email" [formControl]="searchField" [(ngModel)]="searchKey" (input)="searchClients()"
+                                                        autofocus class="form-control" id="FindApptSearchKeys" style="background: none !important;">
+                                                    <p style="color:red;text-align: center;">{{noResult}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <perfect-scrollbar style="max-height:300px;">
+                                        <div class="staff-search-details mt-20">
+                                            <div class="staff-search-details-in">
+                                                <div class="staff-search-list" *ngFor="let client of DataObj">
+                                                    <div class="staff-search-list-img" *ngIf="(client.image && client.image !== '')">
+                                                        <img src="{{apiEndPoints | translate}}/{{client.image}}" width="61" onerror="this.onerror=null;this.src='assets/images/user-icon.png';"
+                                                            height="61" alt="Profile">
+                                                    </div>
+                                                    <div class="staff-search-list-img" *ngIf="(client.image === null || client.image === '' || client.image === undefined)">
+                                                        <div class="appnt-pro-letter" style="width:61px;height:61px;line-height: 57px;">
+                                                            <strong> {{ client.FirstName[0].toUpperCase() }} </strong>
+                                                        </div>
+                                                    </div>
+                                                    <div class="staff-search-list-name" [routerLink]="['/refunddetails/' + client.Id]">
+                                                        <span id="findApptClear">{{client.FirstName}} &nbsp; {{client.LastName}}</span>
+                                                        <span *ngIf="hideClientInfo === 0">
+                                                            <div class="staff-search-list-mobile" *ngIf="!client.Phone || !client.MobilePhone">{{client.Phone}}
+                                                                | {{client.MobilePhone}}</div>
+                                                            <div class="staff-search-list-email">{{client.Email}}</div>
+                                                        </span>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </perfect-scrollbar>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- refunds modal ends -->
+
+            </div>
+        </div>
+    </section>
+    <app-rightbar></app-rightbar>
+</div>

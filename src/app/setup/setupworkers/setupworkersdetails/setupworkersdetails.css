@@ -1,0 +1,173 @@
+::-webkit-file-upload-button {
+    background: #b1d6ec;
+    outline: none;
+    border: solid 1px #0285b9;
+    background: #03a4e4;
+    color: #fff;
+    border-radius: 3pc;
+    padding: 4px;
+}
+
+a.white {
+    cursor: pointer;
+}
+
+.hideinactive {
+    display: none !important;
+}
+
+.showinactive {
+    display: table-row !important;
+}
+
+.activelabel span {
+    display: none;
+}
+
+.activelabel span.labelshow {
+    display: inline-block;
+}
+
+.activelabel span.labelhide {
+    display: inline-block;
+}
+
+p-calendar[inputStyleClass="timezone-calendar calendar"] .ui-calendar button {
+    background: #000 !important;
+    border-color: #000 !important;
+}
+
+p-calendar[inputStyleClass="timezone-calendar calendar"] {
+    display: block;
+}
+
+p-calendar[inputStyleClass="timezone-calendar calendar"] span.ui-calendar {
+    display: block;
+}
+
+p-calendar[inputStyleClass="timezone-calendar calendar"] span.ui-calendar {
+    width: 100%;
+}
+
+p-calendar[inputStyleClass="timezone-calendar calendar"] .ui-calendar button {
+    right: -1px;
+}
+
+.tabcontent {
+    display: none;
+}
+
+.setupworkerdetails-password {
+    background: none;
+    border: solid 1px #fff;
+    padding: 5px 15px 5px 15px;
+    height: 35px;
+    width: 70%;
+    outline: none;
+    color: #000;
+}
+
+.setworkdtl-show-password {
+    top: 10px;
+    cursor: pointer;
+}
+
+.mb-0 {
+    margin-bottom: 0 !important;
+}
+
+.setup-wrk-inactive-label {
+    margin-left: 35px;
+    margin-top: 5px;
+}
+/* used for responsive */
+.setsubcont {
+    margin-right: 10% !important;
+}
+.table-bordered-white>tbody>tr>td {
+    color: white;
+}
+.table-bordered-light>tbody>tr>td {
+    color: white;
+}
+.setsubcont input[type=text], .setsubcont input[type=number], .setsubcont input[type=email],.setupworkerdetails-password, .setsubcont select,
+.setsubcont textarea {
+    color: white;
+}
+.setsubcont input[type=text]:focus, .setsubcont input[type=number]:focus, .setsubcont input[type=email]:focus,.setupworkerdetails-password:focus,
+.setsubcont textarea:focus {
+    color: black;
+}
+.pd-lr {
+    padding: 5px 5px 5px 5px!important;
+}
+.table-bordered-light>thead>tr>th {
+	border: solid 1px #444;
+	vertical-align: middle !important;
+}
+/* 
+	Max width before this PARTICULAR table gets nasty
+	This query will take effect for any screen smaller than 760px
+	and also iPads specifically.
+	*/
+	@media 
+	only screen and (max-width: 760px),
+	(min-device-width: 768px) and (max-device-width: 1024px)  {
+        .table-bordered-light {
+            border: solid 1px #ccc;
+            /* text-transform: uppercase; */
+            font-family: 'AvenirLTStdRoman';
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+	
+		/* Force table to not be like tables anymore */
+		 
+		/* Hide table headers (but not display: none;, for accessibility) */
+		.mobile-table table, .mobile-table thead, .mobile-table tbody, .mobile-table th,  .mobile-table td, .mobile-table tr {
+			display: block;
+		}
+	  .mobile-table	thead tr { 
+			position: absolute;
+			top: -9999px;
+			left: -9999px;
+		}
+		
+		 
+		
+		.mobile-table td { 
+			/* Behave  like a "row" */
+			border: none;
+			 
+			position: relative;
+			padding-left: 50% !important;  
+            border-bottom:1px solid #fff;
+            min-height: 30px!important;
+		}
+		.mobile-table tr td:last-child {
+			border-bottom: 0;
+		}
+		
+		.mobile-table td:before { 
+			/* Now like a table header */
+			position: absolute;
+			/* Top/left values mimic padding */
+			top: 6px;
+			left: 6px;
+			width: 45%; 
+			padding-right: 10px; 
+			white-space: nowrap;
+		}
+		
+		/*
+		Label the data
+		*/
+		.mobile-table td:nth-of-type(1):before { content: "Goals"; }
+		.mobile-table td:nth-of-type(2):before { content: "Start Date"; }
+		.mobile-table td:nth-of-type(3):before { content: "End Date"; }
+		.mobile-table td:nth-of-type(4):before { content: "Goal Target"; }
+		.mobile-table td:nth-of-type(5):before { content: "Calculated Goal"; }
+		.mobile-table td:nth-of-type(6):before { content: "% of Goal"; }
+		.mobile-table td:nth-of-type(7):before { content: ""; }
+		.mobile-table td:nth-of-type(8):before { content: ""; }
+	}

@@ -1,0 +1,189 @@
+<div id="wrapper_setup_new">
+    <app-header [newMenu]="'noNav'"></app-header>
+    <section id="inner_cont">
+        <div class="container form_cont">
+            <div class="row mt-20">
+                <div class="col-md-4 col-sm-2 text-right res-tleft">
+                    <!-- <label>Select Date</label>
+                    <span class="text-danger">*</span> -->
+                </div>
+                <div class="col-md-7 col-sm-8">
+                    <label>Select Date</label>
+                    <span class="text-danger">*</span>
+                    <input type="text" bsDatepicker [maxDate]="maxdate" [(ngModel)]="bsValue" class="datefield" [bsConfig]="datePickerConfig"
+                        (ngModelChange)="generateReport(bsValue)">
+                </div>
+            </div>
+            <!-- <div class="row mt-20">
+                <div class="col-md-5 col-sm-4 text-right res-tleft">
+                    &nbsp;
+                </div>
+                <div class="col-md-7 col-sm-8">
+                    <button type="button" (click)="generateReport()" class="btn btn-primary">
+                        <i class="fa fa-binoculars" aria-hidden="true"></i> Generate</button>
+                </div>
+            </div> -->
+
+            <hr />
+            <div class="row mt-20 mr-10 res-mt-15" *ngIf="itemsDisplay">
+                <ng-container *ngIf="reportData.length > 0">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th class="thcss">{{companyName}}</th>
+                                        <th class="thcss">Daily Cash Drawer Report</th>
+                                        <th class="thcss"> {{sendDate | date: 'MM/dd/yy'}}</th>
+                                    </tr>
+                                </thead>
+
+                            </table>
+                        </div>
+                    </div>
+
+                    <ng-container *ngFor="let report of reportData;let k = index">
+                        <div class="col-md-12 mt-20">
+                            <ng-container *ngIf="report.cashDrawer">
+                                <div class="col-md-12">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th class="thcss">
+                                                        <label>Drawer # </label>
+                                                        <b>{{report['cashDrawer'].Cash_Drawer_Number__c}}</b>
+                                                    </th>
+                                                    <th class="thcss">
+                                                        <label>Drawer Name</label>
+                                                        <b>{{report['cashDrawer'].Cash_Drawer__c}}</b>
+                                                    </th>
+                                                    <th class="thcss">
+                                                        <label>Opening Cash</label>
+                                                        <b>{{report['cashDrawer'].Opening_Cash__c| currency:'USD':true}}</b>
+                                                    </th>
+                                                    <th class="thcss">
+                                                        <label> Closing Cash</label>
+                                                        <b>{{report['cashDrawer'].Closing_Cash__c| currency:'USD':true}}</b>
+                                                    </th>
+                                                    <th class="thcss">
+                                                        <label> Cash Over/Under</label>
+                                                        <b>{{report['cashDrawer'].Cash_Over_Under__c| currency:'USD':true}}</b>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </ng-container>
+
+                            <ng-container *ngFor="let paymentObj of report['paymentsMade']">
+
+                                <div class="col-md-12">
+                                    Ticket#
+                                    <b>{{paymentObj[0].apptTicketName}}</b> Client Name
+                                    <b>{{paymentObj[0].clientName ? paymentObj[0].clientName : 'NO CLIENT'}}</b>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th class="thcss">Payment</th>
+                                                    <th class="thcss">Amount </th>
+                                                    <th class="thcss">Received By</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let paymentdata of paymentObj">
+                                                    <td>{{paymentdata.paymentType}}</td>
+                                                    <td>
+                                                        {{paymentdata.paymentAmount |currency:'USD':true}}
+                                                    </td>
+                                                    <td>{{paymentdata.receivedBy}}</td>
+                                                </tr>
+                                                <tr *ngIf="paymentObj.length > 0">
+                                                    <td>Change Back</td>
+                                                    <td [attr.colspan]="2">
+                                                        {{-1 * paymentObj[0]['balanceDue'] | currency:'USD':true}}
+                                                    </td>
+                                                </tr>
+
+                                                <!-- <tr class="bg-color">
+                                                                            <th>Drawer # Total</th>
+                                                                            <th>{{totalAmt}}</th>
+                                                                            <th></th>
+                                                                            <th></th>
+                                                                            <th></th>
+                                                                        </tr> -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </ng-container>
+
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th class="thcss">Cash In / Out </th>
+                                                <th class="thcss">Amount </th>
+                                                <th class="thcss">Transaction By </th>
+                                                <th class="thcss">To / From </th>
+                                                <th class="thcss">Reason </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let item of report['cashInOut']">
+                                                <td>{{item.Type__c}}</td>
+                                                <td>
+                                                    <span *ngIf="item.Type__c === 'Cash Paid In'">{{item.Amount__c| currency:'USD':true}}</span>
+                                                    <span *ngIf="item.Type__c === 'Cash Paid Out'">-{{item.Amount__c| currency:'USD':true}}</span>
+                                                </td>
+                                                <td>{{item.Transaction_By__c}}</td>
+                                                <td>
+                                                    <span *ngIf="item.Type__c === 'Cash Paid In'"> {{item.From__c}}</span>
+                                                    <span *ngIf="item.Type__c === 'Cash Paid Out'">{{item.To__c}}</span>
+                                                </td>
+                                                <td *ngIf="item.Type__c === 'Cash Paid In'">{{item.Reason__c}}</td>
+                                                <td *ngIf="item.Type__c === 'Cash Paid Out'">{{item.Reason__c}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="col-md-6 text-left bg-color">
+                                    Drawer #{{report['cashDrawerNumber']}} Total
+                                </div>
+                                <div class="col-md-6 text-right bg-color">
+                                    {{AmountData[report['cashDrawerNumber']]| currency:'USD':true}}
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <!-- <div class="row mt-20 res-mt-15"> -->
+
+
+
+                    <div class="text-center">
+                        Tips Left in Drawer do not affect Drawer Totals.
+                    </div>
+                    <div class="text-center">
+                        Tips Paid Out are subtracted from Drawer Totals.
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="reportData.length === 0">
+                    <div class="col-md-12 text-center">
+                        **** No Results Found ****
+                    </div>
+                </ng-container>
+
+                <!-- </div> -->
+            </div>
+        </div>
+    </section>
+    <app-rightbar></app-rightbar>
+</div>
