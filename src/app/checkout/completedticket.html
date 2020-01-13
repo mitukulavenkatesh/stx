@@ -1,0 +1,1103 @@
+<div id="wrapper_setup_new">
+    <!-- <app-header [newMenu]="'noNav'"></app-header> -->
+    <app-header [newMenu]="'noNav'" (emitCompanyInfo)="loadCompanyInfo($event)"></app-header>
+    <div class="row mt-20">
+        <div class="col-md-5 col-sm-4 text-right res-tleft label-css">
+            <label>{{'COMMON.TICKET' | translate }}:</label>
+        </div>
+        <div class="col-md-7 col-sm-8 label-css">
+            <label>{{ticketNumber}}</label>
+        </div>
+    </div>
+    <!--  -->
+    <div class="row mt-10">
+        <div class="col-md-5 col-sm-4 text-right res-tleft label-css">
+            <label>Completed:</label>
+        </div>
+        <div class="col-md-7 col-sm-8 label-css">
+            <label *ngIf="LastModifiedDate[0]"> {{LastModifiedDate[0]}} {{LastModifiedDate[1]}}</label>
+            <label *ngIf="lastmofdate && LastModifiedDate[0] == '' ">{{lastmofdate}}</label>
+        </div>
+    </div>
+    <!--  -->
+    <div class="head-bar">
+        Payment Completed
+    </div>
+    <!--  -->
+    <div class="row mt-10">
+        <div class="col-md-5 col-sm-4 text-right res-tleft label-css">
+            <label>Ticket Total:</label>
+        </div>
+        <div class="col-md-7 col-sm-8 label-css">
+            <label *ngIf="subTotal && !includedTicketsTotal">$ {{prepaidTax + subTotal | number: '2.2-2'}}</label>
+            <label *ngIf="subTotal && includedTicketsTotal">$ {{subTotal + prepaidTax + includedTicketsTotal | number: '2.2-2'}}</label>
+            <label *ngIf="!subTotal && includedTicketsTotal">$ {{subTotal + prepaidTax + includedTicketsTotal | number: '2.2-2'}}</label>
+            <span class="tbl-txt" style="margin-left:343px;" [routerLink]="['/checkout']"> Go To Checkout List</span>
+        </div>
+
+    </div>
+    <!--  -->
+    <div class="row mt-10">
+        <div class="col-md-5 col-sm-4 text-right res-tleft label-css">
+            <label>Change Back Amount: </label>
+        </div>
+        <div class="col-md-7 col-sm-8 label-css">
+            <label>$ ({{balanceDue | number: '2.2-2'}}) </label>
+        </div>
+        <!-- <div class="col-md-7 col-sm-8 label-css">
+            <select class="appointment-select-width select-bg" style="width: 25% !important;" (change)="showAddAmountToTip($event)">
+                <option value="No">Change Back Amount</option>
+                <option value="Add">Add to Tip</option>
+            </select>
+        </div> -->
+    </div>
+    <!--  -->
+    <div class="row mt-10">
+        <div class="col-md-5 col-sm-4 text-right res-tleft label-css">
+            <label>{{'WORKER_TIPS.TIPS_TICKET_TOTAL' | translate}}:</label>
+        </div>
+        <div class="col-md-7 col-sm-8 label-css">
+            <label> $ {{tipTotal | number: '2.2-2'}} </label>
+            <i *ngIf="setPermissin == 1"class="fa fa-plus-circle" aria-hidden="true" style="margin-left: 9px;" (click)="tipPopup()"></i>
+        </div>
+    </div>
+    <!--  -->
+
+    <!-- <div class="row mt-10">
+        <div class="col-md-5 col-sm-4 text-right res-tleft label-css">
+            <div *ngFor='let list of tipsArray; let i = index;'>
+                <div *ngFor='let lists of tipArrTicketServ; let i = index;'>
+                    <h4 class="text-right" style="margin-right:23px;">{{lists.workerName}} (${{lists.price | number: '2.2-2'}})</h4>
+                    <h4 *ngIf="!lists.workerName" class="text-right">NO WORKER </h4>
+                    <input type="hidden" [(ngModel)]="lists.workerName" value="lists.workerName">
+                </div>
+            </div>
+
+            <div class="col-md-7 col-sm-8 label-css" style="height:40px;">
+                <div *ngFor='let list of tipsArray; let i = index;'>
+                <input type="text" style="width:70px;color:#000 !important;" [ngModel]="list.tipAmount" (ngModelChange)="list.tipAmount=$event"
+                    (keypress)="validateNum($event, i)" (blur)="tipPriceOnClick(list.tipAmount, i);" value="{{list.tipAmount }}"
+                />
+                <i class="fa fa-times" aria-hidden="true" (click)="deleteFieldValue(list.workerId)"></i>
+            </div>
+        </div>
+    </div> -->
+
+    <div class="row mt-10">
+        <div *ngFor='let lists of tipsArray; let i = index;'>
+            <div class="col-md-5 col-sm-4 text-right res-tleft label-css">
+                <h4 *ngIf="lists.workerName" class="text-right" style="margin-right:70px;">{{lists.workerName}} </h4>
+                <h4 *ngIf="!lists.workerName" class="text-right">NO WORKER </h4>
+                <div *ngIf='tipArrTicketServ && tipArrTicketServ.length > 0' style="margin-top: -28px;margin-right: -16px;">
+                    <div *ngFor='let list of tipArrTicketServ'>
+                        <h4 *ngIf="list.workerId === lists.workerId" class="text-right"> $({{list.Price__c | number: '2.2-2'}})</h4>
+                    </div>
+                </div>
+                <input type="hidden" [(ngModel)]="lists.workerName" value="lists.workerName">
+            </div>
+
+            <div class="col-md-7 col-sm-8 label-css" style="height:40px;">
+                <input type="text" style="width:70px;color:#000 !important;" [ngModel]="lists.tipAmount" (ngModelChange)="lists.tipAmount=$event"
+                    (keypress)="validateNum($event, i)" (blur)="tipPriceOnClick(lists.tipAmount, i);" value="{{lists.tipAmount }}"
+                />
+                <i class="fa fa-times" aria-hidden="true" (click)="deleteFieldValue(lists.workerId)"></i>
+            </div>
+        </div>
+    </div>
+    <!--  -->
+
+    <div class="row mt-10">
+        <div *ngIf="setPermissin == 1" class="col-md-5 col-sm-4 text-right res-tleft label-css" style="padding-left: 385px;">
+            <select class="appointment-select-width select-bg" [(ngModel)]="selWor" (change)="addWorkerTip($event)">
+                <option value="">Select Worker</option>
+                <option *ngFor="let active of activeWorkerLists" value="{{active.Id}}${{active.names}}">{{active.names}}</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- -->
+    <div class="row mt-30 center-css">
+
+        <button *ngIf='TicketServiceData && TicketServiceData.length > 0 && clientName != ""  && setPermissin == 1 ' class="btn btn-gradient-txt btn-align btn-margin"
+            (click)="saveAll('saveRebook')" [routerLink]="['/appointment/book/' + clientId + '/' + apptId]" [queryParams]="{bookingType:'rebook'}">
+            <span style="font-size: 17px">Save + Rebook</span>
+        </button>
+
+        <button *ngIf="setPermissin == 1" class="btn btn-gradient-txt btn-align btn-margin" (click)="saveAll('saveNew')">
+            <span style="font-size: 17px">Save + New Ticket</span>
+        </button>
+        <button class="btn btn-gradient-txt btn-align btn-margin" (click)="saveAll('save')" *ngIf="setPermissin == 1">
+            <span style="font-size: 17px">Save</span>
+        </button>
+    </div>
+    <!--  -->
+    <div class="row mt-50" style="margin-left:30px;">
+        <div class="col-md-4 text-center" style="margin-right: 113px;">
+            <a class="btns btn-defaults tbl-txt" style="background:blue;padding:8px;color:white;font-weight:600 !important;" (click)="showSmileModal()">
+                <i class="fa fa-smile-o" aria-hidden="true"></i> Edit Ticket Rating</a>
+
+            <a class="btns btn-defaults tbl-txt" style="background:#a79898;padding:8px;margin-left:35px;color:white;font-weight:600 !important;"
+                (click)="editTicket()" *ngIf="setPermissin == 1 && (decodedToken['Tickets'] && decodedToken['Tickets'][7]['allowAcces'])">
+                <i class="fa fa-pencil fa-fw" aria-hidden="true"></i> Edit Ticket Details</a>
+        </div>
+
+        <div class="col-md-4 text-center" style="margin-left:213px;">
+            <a class="btns btn-defaults tbl-txt" style="background:rebeccapurple;padding:8px;color:white;font-weight:600 !important;"
+                (click)="printDiv()">
+                <i class="fa fa-print" aria-hidden="true"></i> Print Receipt</a>
+
+
+            <a class="btns btn-defaults tbl-txt" style="background:green;padding:8px;margin-left:35px;color:white;font-weight:600 !important;"
+                (click)="showRecieptModal()" *ngIf="decodedToken['Tickets'] && decodedToken['Tickets'][3]['allowAcces']">
+                <i class="fa fa-envelope" aria-hidden="true"></i> Email Receipt</a>
+
+        </div>
+    </div>
+    <div class="row mt-20">
+        <div class="profile-list-view-txt wt-bg blk-clr head-bar">
+            <!-- <div class="check-profile-list"> -->
+            <div class="row mt-10">
+                <div class="check-profile-list-name">
+                    <h4 style="font-size: 16px !important;">{{companyInfo?.Name}}</h4>
+                    <h4 style="font-size: 16px !important;">{{companyInfo?.Street_Address__c }}</h4>
+                    <h4 style="font-size: 16px !important;">{{companyInfo?.City__c }}, {{companyInfo?.State_Code__c }} {{companyInfo?.Postal_Code__c}}</h4>
+                    <h4 style="font-size: 16px !important;">{{companyInfo?.Phone__c }} | {{companyInfo?.Email__c }}</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div *ngIf="clientName" class="check-profile-list-name tbl-txt text-uppercase" [routerLink]="['/client/edit/' + clientId]"
+                    [queryParams]="{ actionMethod: 'completedTicket','apptId': apptId }">{{clientName}}</div>
+                <div *ngIf="!clientName" class="check-profile-list-name text-uppercase">No Client</div>
+            </div>
+
+            <hr>
+
+            <div class="check-profile-details">
+                <div class="check-profile-details-in clearfix">
+                    <div class="sub-item-main">
+                        <div class="col-md-12">
+                            <div class="clearfix wt-clr">
+                                <div class="profile-list-view-txt wt-bg blk-clr">
+                                    <div class="check-profile-list">
+                                        <!-- <div class="font-400 appnt-pro-image">
+                                            <!-- <div class="appnt-pro-letter">
+                                                <strong> S</strong>
+                                                <strong style="cursor: auto;">N</strong>
+                                            </div>
+                                        </div>
+                                        <div class="check-profile-list-name text-uppercase tbl-txt">Sravan kumar</div> -->
+                                    </div>
+                                    <div class="check-profile-details">
+                                        <div class="check-profile-details-in clearfix">
+                                            <!-- <perfect-scrollbar> -->
+
+                                            <!-- ----------------ticketservices List-- start----------------- -->
+                                            <div class="sub-item-main" *ngIf='TicketServiceData && TicketServiceData.length > 0'>
+                                                <div class="sub-item-service">
+                                                    <div class="sub-item1 text-uppercase">Services</div>
+                                                    <div class="sub-item2"></div>
+                                                    <div class="sub-item3">
+                                                        <h4> {{serviceTotal | number: '2.2-2'}}</h4>
+                                                    </div>
+                                                </div>
+                                                <div class="sub-item-sub">
+                                                    <div class="sub-item-service">
+                                                        <div *ngFor='let list of TicketServiceData'>
+                                                            <div class="sub-item1"> {{list.ServiceName}} {{list.Booked_Package__c ? ' "Prepaid Package"':'
+                                                                '}}
+                                                            </div>
+                                                            <div class="sub-item2"></div>
+                                                            <div class="sub-item2"></div>
+                                                            <div class="sub-item3"> {{list.Net_Price__c | number: '2.2-2'}}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="sub-item-main" *ngIf='ticketProductsList && ticketProductsList.length > 0'>
+                                                <div class="sub-item-service">
+                                                    <div class="sub-item1 text-uppercase">Product</div>
+                                                    <div class="sub-item2"></div>
+                                                    <div class="sub-item3">
+                                                        <h4> {{ productTotal | number: '2.2-2'}}</h4>
+                                                    </div>
+                                                </div>
+                                                <div class="sub-item-sub">
+                                                    <div class="sub-item-service">
+                                                        <div *ngFor='let list of ticketProductsList'>
+                                                            <div class="sub-item1"> {{list.Name}} </div>
+                                                            <div class="sub-item2"></div>
+                                                            <div class="sub-item2"></div>
+                                                            <div class="sub-item3"> {{list.Net_Price__c * list.quantity | number: '2.2-2'}}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="sub-item-main" *ngIf='ticketOthersList && ticketOthersList.length > 0'>
+                                                <div class="sub-item-service">
+                                                    <div class="sub-item1 text-uppercase">Other</div>
+                                                    <div class="sub-item2"></div>
+                                                    <div class="sub-item3">{{(otherTotal + this.packageTax) | number: '2.2-2'}}</div>
+                                                </div>
+
+                                                <div class="sub-item-sub">
+                                                    <div class="sub-item-service" *ngFor='let list of ticketOthersList'>
+                                                        <div class="sub-item1">
+                                                            {{list.Transaction_Type__c}} {{list.Transaction_Type__c==='Package' ? list.packageName : ''}} {{(list.Transaction_Type__c==='Gift')
+                                                            ? (list.Gift_Number__c) : ''}} {{(list.Online__c === 1) ? '(OL)'
+                                                            : ''}}
+                                                        </div>
+                                                        <div class="sub-item2"></div>
+                                                        <div class="sub-item3">{{list.Amount__c | number: '2.2-2'}}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="sub-item-main" *ngIf='tipTotal'>
+                                                <div class="sub-item-service">
+                                                    <div class="sub-item1 text-uppercase">Tip</div>
+                                                    <div class="sub-item2"></div>
+                                                    <div class="sub-item3">{{tipTotal | number: '2.2-2'}} </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="sub-item-main">
+                                                <div class="sub-item-service">
+                                                    <div class="sub-item1 text-uppercase">Subtotal</div>
+                                                    <div class="sub-item2"></div>
+                                                    <div class="sub-item3">{{subTotal | number: '2.2-2'}}</div>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="prepaidTax" class="sub-item-main">
+                                                <div class="sub-item-service">
+                                                    <div class="sub-item1 text-uppercase">Tax</div>
+                                                    <div class="sub-item2"></div>
+                                                    <div class="sub-item3"> {{prepaidTax | number: '2.2-2'}}</div>
+                                                </div>
+                                            </div>
+                                            <div class="sub-item-main" *ngIf='includedTicketsList && includedTicketsList.length > 0'>
+                                                <div class="sub-item-service" *ngFor='let list of includedTicketsList'>
+                                                    <div class="sub-item1 text-uppercase">Incl Tckt Amt [{{list.Name}}]</div>
+                                                    <div class="sub-item2"></div>
+                                                    <div class="sub-item3">{{-list.Included_Ticket_Amount__c | number: '2.2-2'}}</div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="total-charge clearfix">
+                                        <div class="col-md-4 col-sm-4 total">
+                                            <b>TOTAL:</b>
+                                        </div>
+                                        <div class="col-md-4 listcharge">
+                                            <h2 *ngIf="subTotal && !includedTicketsTotal" class="price-total" id="totalAmountId">{{prepaidTax + subTotal | number: '2.2-2'}}</h2>
+                                            <h2 *ngIf="subTotal && includedTicketsTotal" class="price-total" id="totalAmountId">{{subTotal + prepaidTax + includedTicketsTotal | number: '2.2-2'}}</h2>
+                                            <h2 *ngIf="!subTotal && includedTicketsTotal" class="price-total" id="totalAmountId">{{subTotal + prepaidTax + includedTicketsTotal | number: '2.2-2'}}</h2>
+                                        </div>
+                                    </div>
+                                    <div class="check-profile-details">
+                                        <div class="check-profile-details-in clearfix" *ngFor='let list of ticketPaymentList'>
+
+                                            <div class="sub-item-main">
+                                                <div class="sub-item-service">
+                                                    <div class="sub-item1 text-uppercase">Payment type</div>
+                                                    <div class="sub-item2"></div>
+                                                    <div class="sub-item3">{{list.paymentTypeName}}</div>
+                                                </div>
+                                            </div>
+                                            <div class="sub-item-main">
+                                                <div class="sub-item-service">
+                                                    <div class="sub-item1 text-uppercase">Amount paid</div>
+                                                    <div class="sub-item2"></div>
+                                                    <div class="sub-item3"> {{list.Amount_Paid__c | number: '2.2-2'}}</div>
+                                                </div>
+                                            </div>
+                                            <div class="sub-item-main">
+                                                <div class="sub-item-service">
+                                                    <div class="sub-item1 text-uppercase">change back</div>
+                                                    <div class="sub-item2"></div>
+                                                    <div class="sub-item3">{{balanceDue | number: '2.2-2'}}</div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+
+                                    </div>
+                                    <div class="row mt-20">
+                                        <h4>Created Date: {{CreatedDate[0] ? CreatedDate[0] : lastmofdate | date: 'MM/dd/yyyy
+                                            HH:mm' }} {{CreatedDate[1]}}</h4>
+                                        <h4>Last Modified Date: {{LastModifiedDate[0] ? LastModifiedDate[0] : lastmofdate | date:
+                                            'MM/dd/yyyy HH:mm'}} {{LastModifiedDate[1]}}
+                                        </h4>
+
+                                    </div>
+                                    <div class="row mt-20" *ngIf="posLists" style="color:#000">
+                                        <h4>{{posLists}}</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="row mt-50">
+    </div>
+
+    <app-rightbar></app-rightbar>
+
+    <!-- pop up for simle -->
+    <div bsModal #smileModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>
+                        <b style="font-weight: 400;margin-left: 88px;">{{clientName}}</b>
+                    </h4>
+                    <!-- <button type="button" class="close" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button> -->
+                </div>
+                <div class="modal-body" style="background-color:#FFFFFF ">
+                    <div class="row">
+                        <p class="red">{{error | translate }}</p>
+                        <div class="clearfix">
+                            <!-- <div class="col-md-6 text-right"> -->
+                            <div class=" col-md-12 emotion-icons text-center" style="cursor: pointer;">
+                                <ul>
+                                    <li class="{{styleOnClickGood}}">
+                                        <i class="fa fa-smile-o" style="color:rebeccapurple;" aria-hidden="true" (click)="addTicketRating('Good')"></i>
+                                    </li>
+                                    <li class="{{styleOnClickFair}}">
+                                        <i class="fa fa-meh-o" style="color:rebeccapurple;" aria-hidden="true" (click)="addTicketRating('Fair')"></i>
+                                    </li>
+                                    <li class="{{styleOnClickPoor}}">
+                                        <i class="fa fa-frown-o" style="color:rebeccapurple;" aria-hidden="true" (click)="addTicketRating('Poor')"></i>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- </div> -->
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="text-center mt-40">
+                            <button class="save-btn" type="button" (click)="ratingSend()">Update</button>
+                            <button class="cancel-btn" (click)="hidePopup()" type="button">{{'BUTTON.CANCEL' | translate}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- service popup -->
+    <div bsModal #serviceModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+        aria-hidden="true" style="z-index:10000;">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content" style="width: 356px;bottom: -72px;">
+                <div class="modal-header" style="margin-bottom: -5px;color:#2d7aa8 !important;margin-top: 15px;">
+                    <h4>
+                        <b>{{serviceName}}</b>
+                    </h4>
+                </div>
+                <div class="modal-body" style="background-color:#FFFFFF ">
+                    <div class="row" style="margin-left: -43px;">
+                        <p class="red">{{error | translate }}</p>
+                        <div class="clearfix">
+                            <div class="row mt-10">
+                                <div class="col-md-5 col-sm-4 text-right res-tleft">
+                                    <label>Worker:</label>
+                                </div>
+                                <div style="margin-top:1px; padding-left: 184px;">
+                                    <select style="background-color:white;" [(ngModel)]="serviceworkerId">
+                                        <option *ngFor="let active of serviceLists" value="{{active.Id}}">{{active.FullName}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mt-10">
+                                <div class="col-md-5 col-sm-4 text-right res-tleft ">
+                                    <label>Service Note:</label>
+                                </div>
+                                <div class="col-md-7 col-sm-8">
+                                    <textarea class="form-control mb-5" style="width:auto;color:black; border-color:black;" [(ngModel)]="serviceNotes" value="{{serviceNotes}}">
+                                                    </textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="text-center mt-40">
+                            <button class="save-btn" type="button" (click)="serviceSave();">Update</button>
+                            <button class="cancel-btn" (click)="hidePopup()" type="button">{{'BUTTON.CANCEL' | translate}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- product popup -->
+    <div bsModal #productModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+        aria-hidden="true" style="z-index:10000;">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content" style="width: 356px;bottom: -72px;">
+                <div class="modal-header" style="margin-bottom: -5px;color:#2d7aa8 !important;margin-top: 15px;">
+                    <h4>
+                        <b>{{productName}}</b>
+                    </h4>
+                </div>
+                <div class="modal-body" style="background-color:#FFFFFF ">
+                    <div class="row" style="margin-left: -43px;">
+                        <p class="red">{{error | translate }}</p>
+                        <div class="clearfix">
+                            <div class="row mt-10">
+                                <div class="col-md-5 col-sm-4 text-right res-tleft">
+                                    <label>Worker:</label>
+                                </div>
+                                <div style="margin-top:1px; padding-left: 184px;">
+                                    <select style="background-color:white;" [(ngModel)]="productWorkerId">
+                                        <option *ngFor="let active of productListsWorkers" value="{{active.Id}}">{{active.FullName}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- <div class="row mt-10">
+                                <div class="col-md-5 col-sm-4 text-right res-tleft ">
+                                    <label>Service Note:</label>
+                                </div>
+                                <div class="col-md-7 col-sm-8">
+                                    <textarea class="form-control mb-5" style="width:80%;color:black; border-color:black;">
+                                                            </textarea>
+                                </div>
+                            </div> -->
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="text-center mt-40">
+                            <button class="save-btn" type="button" (click)="productSave();">Update</button>
+                            <button class="cancel-btn" (click)="hidePopup()" type="button">{{'BUTTON.CANCEL' | translate}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- other popup -->
+    <div bsModal #otherModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"
+        style="z-index:10000;">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content" style="width: 356px;bottom: -72px;">
+                <div class="modal-header" style="margin-bottom: -5px;color:#2d7aa8 !important;margin-top: 15px;">
+                    <h4>
+                        <b>{{otherName}}</b>
+                    </h4>
+                </div>
+                <div class="modal-body" style="background-color:#FFFFFF ">
+                    <div class="row" style="margin-left: -43px;">
+                        <p class="red">{{error | translate }}</p>
+                        <div class="clearfix">
+                            <div class="row mt-10">
+                                <div class="col-md-5 col-sm-4 text-right res-tleft">
+                                    <label>Worker:</label>
+                                </div>
+                                <div style="margin-top:1px; padding-left: 184px;" *ngIf="activeWorkerLists">
+                                    <select style="background-color:white;" [(ngModel)]="otherWorkerId">
+                                        <option *ngFor="let active of activeWorkerLists" value="{{active.Id}}">{{active.FullName}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="text-center mt-40">
+                            <button class="save-btn" type="button" (click)="otherSave();">Update</button>
+                            <button class="cancel-btn" (click)="hidePopup()" type="button">{{'BUTTON.CANCEL' | translate}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div bsModal #recieptModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>
+                        <b style="font-weight: 400;">Email Receipt</b>
+                    </h4>
+                    <button type="button" class="close" (click)="commonCancelModal()" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="background-color:#FFFFFF ">
+                    <div class="row">
+                        <p class="red">{{error | translate }}</p>
+                        <div class="clearfix">
+                            <div class="col-md-2 text-right">
+                                <label>
+                                    <b style="font-weight: 400;">Client Name:</b>
+                                </label>
+                            </div>
+                            <div class="col-md-4 text-left">
+                                {{!clientName ? noclientLabel:clientName}}
+                            </div>
+                            <!-- </div>
+                    <div class="clearfix"> -->
+
+                            <div class="col-md-2 text-right">
+                                <label>
+                                    <b style="font-weight: 500;">Client Email:</b>
+                                </label>
+                            </div>
+                            <div class="col-md-4 text-right">
+                                <input type="text" [(ngModel)]="clientEmail" (keypress)="clearErrMsg()" style="width:100%; border-color: #000 !important;"
+                                />
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="text-center mt-40">
+                            <button class="save-btn" type="button" (click)='sendEmailReciept()'>Send</button>
+                            <button class="cancel-btn" type="button" (click)="commonCancelModal()">{{'BUTTON.CANCEL' | translate}}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+    </div>
+
+    <div bsModal #tipModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" style="padding-left: 100px;padding-right: 100px;padding-top: 50px;">
+            <div class="modal-content form_cont">
+                <div class="modal-header" style="border-bottom: 0px;">
+                    <!-- <h4>
+                        <b style="font-weight: 400;">Tip </b>
+                    </h4>  -->
+                </div>
+
+                <div class="modal-body" style="background-color:#FFFFFF;padding: 20px;">
+                    <div class="row" style="padding-top: 5px;">
+                        <div class="clearfix">
+                            <div class="col-md-4">
+                                <label>Amount:</label>
+                                <!-- <input type="hidden" id="some" value="{{tipAmount}}" /> -->
+                                <input type="number" id="tipAmountAdd" style="border-color:black;width: 80%;" min="0" (keypress)="numbersOnly($event);" placeholder="Amount"
+                                    [(ngModel)]="tipAmountAdd" />
+                                <div *ngIf="errTipAmount" (keypress)="clearErrorMsg();" class="red text-center" style="padding: 10px;margin-left: -46px;">
+                                    <h6>{{errTipAmount | translate}}</h6>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label>Payment Type</label>
+                                <input type="text" disabled style="border-color:black;width: 80%;" [(ngModel)]="paymentType" value="Cash" />
+                            </div>
+
+                            <div class="col-md-4">
+                                <label>Type:</label>
+                                <!-- <input type="text" disabled style="border-color:black;width: 80%;" value="Tip Left In Drawer" [(ngModel)]="tipName" /> -->
+                                <select style="border-color:black;width: 100%;" [(ngModel)]="tipName">
+                                    <option value="Tip Left In Drawer">Tip Left In Drawer</option>
+                                    <option value="Tip Paid Out">Tip Paid Out</option>
+                                </select>
+                                <div *ngIf="errTipName" (keypress)="clearErrorMsg();" class="red text-center" style="padding: 10px;margin-left: -46px;">
+                                    <h6>{{errTipName | translate}}</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="text-center mt-40">
+                            <button class="save-btn" type="button" (click)="saveAdditionalAmt()">Save</button>
+                            <button class="cancel-btn" type="button" (click)="hidePopup()">{{'BUTTON.CANCEL' | translate}}</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+    </div>
+
+    <div bsModal #editTicketModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <button type="button" class="close" (click)="closeEditTicketModal()" aria-label="Close" style="padding:32px;line-height:2;">
+                    <span aria-hidden="true" style="padding: 17px;font-size: 29px">&times;</span>
+                </button>
+
+                <div class="row mt-20">
+                    <div class="profile-list-view-txt wt-bg blk-clr head-bar" style="margin-left: 164px;">
+                        <!-- <div class="check-profile-list"> -->
+                        <div class="row mt-10">
+                            <div class="check-profile-list-name">
+                                <h4 style="font-size: 16px !important;">{{companyInfo?.Name}}</h4>
+                                <h4 style="font-size: 16px !important;">{{companyInfo?.Street_Address__c }}</h4>
+                                <h4 style="font-size: 16px !important;">{{companyInfo?.City__c }}, {{companyInfo?.State_Code__c }} {{companyInfo?.Postal_Code__c}}</h4>
+                                <h4 style="font-size: 16px !important;">{{companyInfo?.Phone__c }} | {{companyInfo?.Email__c }}</h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="check-profile-list-name text-uppercase">{{!clientName ? noclientLabel:clientName}}</div>
+                        </div>
+
+                        <hr>
+
+                        <div class="check-profile-details">
+                            <div class="check-profile-details-in clearfix">
+                                <div class="sub-item-main">
+                                    <div class="col-md-12">
+                                        <div class="clearfix wt-clr">
+                                            <div class="profile-list-view-txt wt-bg blk-clr">
+
+                                                <div class="check-profile-details">
+                                                    <div class="check-profile-details-in clearfix">
+                                                        <!-- <perfect-scrollbar> -->
+
+                                                        <!-- ----------------ticketservices List-- start----------------- -->
+                                                        <div class="sub-item-main" *ngIf='TicketServiceData && TicketServiceData.length > 0'>
+                                                            <div class="sub-item-service">
+                                                                <div class="sub-item1 text-uppercase">Services</div>
+                                                                <div class="sub-item2"></div>
+                                                                <div class="sub-item3">
+                                                                    <h4> {{ serviceTotal | number: '2.2-2'}}</h4>
+                                                                </div>
+                                                            </div>
+                                                            <div class="sub-item-sub">
+                                                                <div class="sub-item-service">
+                                                                    <div *ngFor='let list of TicketServiceData'>
+                                                                        <div class="sub-item1 tbl-txt" (click)="showServiceModal(list)"> {{list.ServiceName}} {{list.Booked_Package__c ? '
+                                                                            "Prepaid Package"':' '}}
+                                                                        </div>
+                                                                        <div class="sub-item2"></div>
+                                                                        <div class="sub-item2"></div>
+                                                                        <div class="sub-item3"> {{list.Net_Price__c | number: '2.2-2'}}</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="sub-item-main" *ngIf='ticketProductsList && ticketProductsList.length > 0'>
+                                                            <div class="sub-item-service">
+                                                                <div class="sub-item1 text-uppercase">Product</div>
+                                                                <div class="sub-item2"></div>
+                                                                <div class="sub-item3">
+                                                                    <h4> {{ productTotal | number: '2.2-2'}}</h4>
+                                                                </div>
+                                                            </div>
+                                                            <div class="sub-item-sub">
+                                                                <div class="sub-item-service">
+                                                                    <div *ngFor='let list of ticketProductsList'>
+                                                                        <div class="sub-item1 tbl-txt" (click)="showProductModal(list)"> {{list.Name}} </div>
+                                                                        <div class="sub-item2"></div>
+                                                                        <div class="sub-item2"></div>
+                                                                        <div class="sub-item3"> {{list.Net_Price__c * list.quantity | number: '2.2-2'}}</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="sub-item-main" *ngIf='ticketOthersList && ticketOthersList.length > 0'>
+                                                            <div class="sub-item-service">
+                                                                <div class="sub-item1 text-uppercase">Other</div>
+                                                                <div class="sub-item2"></div>
+                                                                <div class="sub-item3">{{(otherTotal + this.packageTax) | number: '2.2-2'}}</div>
+                                                            </div>
+
+                                                            <div class="sub-item-sub">
+                                                                <div class="sub-item-service" *ngFor='let list of ticketOthersList'>
+                                                                    <div class="sub-item1">
+                                                                        {{list.Transaction_Type__c}} {{list.Transaction_Type__c ==='Package' ? list.packageName : ''}} {{(list.Transaction_Type__c==='Gift')
+                                                                        ? (list.Gift_Number__c) : ''}} {{(list.Online__c
+                                                                        === 1) ? '(OL)' : ''}}
+                                                                    </div>
+
+                                                                    <div class="sub-item2"></div>
+
+                                                                    <div class="sub-item3">{{list.Amount__c | number: '2.2-2'}}</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="sub-item-main" *ngIf='tipTotal'>
+                                                            <div class="sub-item-service">
+                                                                <div class="sub-item1 text-uppercase">Tip</div>
+                                                                <div class="sub-item2"></div>
+                                                                <div class="sub-item3 tbl-txt" (click)="editTip(list)">{{tipTotal | number: '2.2-2'}} </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="sub-item-main">
+                                                            <div class="sub-item-service">
+                                                                <div class="sub-item1 text-uppercase">Subtotal</div>
+                                                                <div class="sub-item2"></div>
+                                                                <div class="sub-item3">{{subTotal | number: '2.2-2'}}</div>
+                                                            </div>
+                                                        </div>
+                                                        <div *ngIf="prepaidTax" class="sub-item-main">
+                                                            <div class="sub-item-service">
+                                                                <div class="sub-item1 text-uppercase">Tax</div>
+                                                                <div class="sub-item2"></div>
+                                                                <div class="sub-item3"> {{prepaidTax | number: '2.2-2'}}</div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="sub-item-main" *ngIf='includedTicketsList && includedTicketsList.length > 0'>
+                                                            <div class="sub-item-service" *ngFor='let list of includedTicketsList'>
+                                                                <div class="sub-item1 text-uppercase">Incl Tckt Amt [{{list.Name}}]</div>
+                                                                <div class="sub-item2"></div>
+                                                                <div class="sub-item3">{{-list.Included_Ticket_Amount__c | number: '2.2-2'}}</div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="total-charge clearfix">
+                                                    <div class="col-md-4 col-sm-4 total">
+                                                        <b>TOTAL:</b>
+                                                    </div>
+                                                    <div class="col-md-4 listcharge">
+                                                        <h2 *ngIf="subTotal && !includedTicketsTotal" class="price-total" id="totalAmountId">{{totalTax + subTotal | number: '2.2-2'}}</h2>
+                                                        <h2 *ngIf="subTotal && includedTicketsTotal" class="price-total" id="totalAmountId">{{subTotal + totalTax + includedTicketsTotal | number: '2.2-2'}}</h2>
+                                                        <h2 *ngIf="!subTotal && includedTicketsTotal" class="price-total" id="totalAmountId">{{subTotal + totalTax + includedTicketsTotal | number: '2.2-2'}}</h2>
+                                                    </div>
+                                                </div>
+                                                <div class="check-profile-details">
+                                                    <div class="check-profile-details-in clearfix" *ngFor='let list of ticketPaymentList'>
+
+                                                        <div class="sub-item-main">
+                                                            <div class="sub-item-service">
+                                                                <div class="sub-item1 text-uppercase">Payment type</div>
+                                                                <div class="sub-item2"></div>
+
+                                                                <div class="sub-item3 tbl-txt" (click)="showPaymentModal(list)">{{list.paymentTypeName}}</div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="sub-item-main">
+                                                            <div class="sub-item-service">
+                                                                <div class="sub-item1 text-uppercase">Amount paid</div>
+                                                                <div class="sub-item2"></div>
+                                                                <div class="sub-item3"> {{list.Amount_Paid__c | number: '2.2-2'}}</div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="sub-item-main">
+                                                            <div class="sub-item-service">
+                                                                <div class="sub-item1 text-uppercase">change back</div>
+                                                                <div class="sub-item2"></div>
+                                                                <div class="sub-item3">{{balanceDue | number: '2.2-2'}}</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- <div class="row mt-20">
+                                                    <button class="save-btn" type="button" (click)="otherSave();">Update</button>
+                                                    <button class="cancel-btn" (click)="hidePopup()" type="button">{{'BUTTON.CANCEL' | translate}}
+                                                    </button>
+                                                </div> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div bsModal #paymentModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+        aria-hidden="true" style="z-index:10000;">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content" style="width: 356px;bottom: -72px;">
+                <div class="modal-header" style="margin-bottom: -5px;color:#2d7aa8 !important;margin-top: 15px;">
+                    <h4>
+                        <b>{{serviceName}}</b>
+                    </h4>
+                </div>
+                <div class="modal-body" style="background-color:#FFFFFF ">
+                    <div class="row" style="margin-left: -43px;">
+                        <div class="clearfix">
+                            <div class="row mt-10">
+                                <div class="col-md-5 col-sm-4 text-right res-tleft">
+                                    <label>Payment:</label>
+                                </div>
+                                <div style="margin-top:1px; padding-left: 184px;">
+
+                                    <select style="background-color:white;" [(ngModel)]="paymentValue">
+                                        <option *ngFor="let payment of paymentList" value="{{payment.Payment_Type__c}}">{{payment.Name}}</option>
+                                    </select>
+                                    <input type="hidden" value="{{paymentId}}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="text-center mt-40">
+                            <button class="save-btn" type="button" (click)="paymentService();">Update</button>
+                            <button class="cancel-btn" (click)="hidePopup()" type="button">{{'BUTTON.CANCEL' | translate}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div bsModal #editTipModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+        aria-hidden="true" style="z-index:10000;">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content" style="width: 356px;bottom: -72px;">
+                <div class="modal-header" style="margin-bottom: -5px;color:#2d7aa8 !important;margin-top: 15px;">
+                    <h4>
+                        <b>Update Tip Amount</b>
+                    </h4>
+                </div>
+                <div class="modal-body" style="background-color:#FFFFFF ">
+                    <div class="row" style="margin-left: -43px;">
+                        <div class="clearfix">
+                            <div class="row mt-10">
+                                <div class="col-md-5 col-sm-4 text-right res-tleft">
+                                    <label>Amount:</label>
+                                </div>
+                                <div style="margin-top:1px; padding-left: 184px;">
+                                    <input type="number" style="border-color:black;width: 80%;" min="1" value="{{tipTotal}}" (keypress)="numbersOnly($event);"
+                                        [(ngModel)]="editTipAmnt" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="text-center mt-40">
+                            <button class="save-btn" type="button" (click)="updateTipAmounts();">Update</button>
+                            <button class="cancel-btn" (click)="hideTipPopup()" type="button">{{'BUTTON.CANCEL' | translate}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Document</title>
+    </head>
+
+    <body style="display:none; " id="inner_cont">
+        <div class="profile-list-view-txt wt-bg blk-clr head-bar">
+            <!-- <div class="check-profile-list"> -->
+            <div class="row mt-10">
+                <div class="check-profile-list-name">
+                    <h4> {{companyInfo?.Name}}</h4>
+                    <h4> {{companyInfo?.Street_Address__c }}</h4>
+                    <h4> {{companyInfo?.City__c }}, {{companyInfo?.State_Code__c }} {{companyInfo?.Postal_Code__c}}</h4>
+                    <h4>{{companyInfo?.Phone__c }} | {{companyInfo?.Email__c }}</h4>
+                </div>
+            </div>
+            <div class="row ">
+                <div class="check-profile-list-name text-uppercase">{{!clientName ? noclientLabel:clientName}}</div>
+            </div>
+            <hr>
+            <div class="check-profile-details">
+                <div class="check-profile-details-in clearfix">
+                    <div class="sub-item-main">
+                        <div class="col-md-12">
+                            <div class="clearfix wt-clr">
+                                <div class="profile-list-view-txt wt-bg blk-clr">
+                                    <div class="check-profile-list">
+                                        <!-- <div class="font-400 appnt-pro-image">
+                                                    <!-- <div class="appnt-pro-letter">
+                                                        <strong> S</strong>
+                                                        <strong style="cursor: auto;">N</strong>
+                                                    </div>
+                                                </div>
+                                                <div class="check-profile-list-name text-uppercase tbl-txt">Sravan kumar</div> -->
+                                    </div>
+                                    <div class="check-profile-details">
+                                        <div class="check-profile-details-in clearfix">
+                                            <!-- <perfect-scrollbar> -->
+
+                                            <!-- ----------------ticketservices List-- start----------------- -->
+                                            <div class="sub-item-main" *ngIf='TicketServiceData && TicketServiceData.length > 0'>
+                                                <div class="sub-item-service">
+                                                    <div class="sub-item1 text-uppercase">Services</div>
+                                                    <div class="sub-item2"></div>
+                                                    <div class="sub-item3">
+                                                        <h4> {{ serviceTotal | number: '2.2-2'}}</h4>
+                                                        <!-- <h4> {{ (serviceTotal + serTax) | number: '2.2-2'}}</h4> -->
+                                                    </div>
+                                                </div>
+                                                <div class="sub-item-sub">
+                                                    <div class="sub-item-service">
+                                                        <div *ngFor='let list of TicketServiceData'>
+                                                            <div class="sub-item1 tbl-txt" (click)="showServiceModal(list)"> {{list.ServiceName}} {{list.Booked_Package__c ? ' "Prepaid Package"':'
+                                                                '}}
+                                                            </div>
+                                                            <div class="sub-item2"></div>
+                                                            <div class="sub-item2"></div>
+                                                            <div class="sub-item3"> {{list.Net_Price__c | number: '2.2-2'}}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="sub-item-main" *ngIf='ticketProductsList && ticketProductsList.length > 0'>
+                                                <div class="sub-item-service">
+                                                    <div class="sub-item1 text-uppercase">Product</div>
+                                                    <div class="sub-item2"></div>
+                                                    <div class="sub-item3">
+                                                        <h4> {{ productTotal | number: '2.2-2'}}</h4>
+                                                        <!-- <h4> {{ (productTotal + prodTax) | number: '2.2-2'}}</h4> -->
+                                                    </div>
+                                                </div>
+                                                <div class="sub-item-sub">
+                                                    <div class="sub-item-service">
+                                                        <div *ngFor='let list of ticketProductsList'>
+                                                            <div class="sub-item1"> {{list.Name}} </div>
+                                                            <div class="sub-item2"></div>
+                                                            <div class="sub-item2"></div>
+                                                            <div class="sub-item3"> {{list.Net_Price__c * list.quantity | number: '2.2-2'}}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="sub-item-main" *ngIf='ticketOthersList && ticketOthersList.length > 0'>
+                                                <div class="sub-item-service">
+                                                    <div class="sub-item1 text-uppercase">Other</div>
+                                                    <div class="sub-item2"></div>
+                                                    <div class="sub-item3">{{(otherTotal + this.packageTax) | number: '2.2-2'}}</div>
+                                                </div>
+
+                                                <div class="sub-item-sub">
+                                                    <div class="sub-item-service" *ngFor='let list of ticketOthersList'>
+                                                        <div class="sub-item1">
+                                                            {{list.Transaction_Type__c}} {{list.Transaction_Type__c ==='Package' ? list.packageName : ''}} {{(list.Transaction_Type__c==='Gift')
+                                                            ? (list.Gift_Number__c) : ''}} {{(list.Online__c === 1) ? '(OL)'
+                                                            : ''}}
+                                                        </div>
+
+                                                        <div class="sub-item2"></div>
+
+                                                        <div class="sub-item3">{{list.Amount__c | number: '2.2-2'}}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div *ngIf="tipTotal" class="sub-item-main">
+                                                <div class="sub-item-service">
+                                                    <div class="sub-item1 text-uppercase">Tip</div>
+                                                    <div class="sub-item2"></div>
+                                                    <input type="hidden" [(ngModel)]="tipTotalHidden" value="{{tipTotal}}">
+                                                    <div class="sub-item3">{{tipTotal | number: '2.2-2'}} </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="sub-item-main">
+                                                <div class="sub-item-service">
+                                                    <div class="sub-item1 text-uppercase">Subtotal</div>
+                                                    <div class="sub-item2"></div>
+                                                    <div class="sub-item3">{{subTotal | number: '2.2-2'}}</div>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="prepaidTax" class="sub-item-main">
+                                                <div class="sub-item-service">
+                                                    <div class="sub-item1 text-uppercase">Tax</div>
+                                                    <div class="sub-item2"></div>
+                                                    <div class="sub-item3"> {{prepaidTax | number: '2.2-2'}}</div>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="includedTicketsList" class="sub-item-main">
+                                                <div class="sub-item-service" *ngFor='let list of includedTicketsList'>
+                                                    <div class="sub-item1 text-uppercase">Incl Tckt Amt [{{list.Name}}]</div>
+                                                    <div class="sub-item2"></div>
+                                                    <div class="sub-item3">{{-list.Included_Ticket_Amount__c | number: '2.2-2'}}</div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="total-charge clearfix">
+                                        <div class="col-md-4 col-sm-4 total">
+                                            <b>TOTAL:</b>
+                                        </div>
+                                        <div class="col-md-4 listcharge">
+                                            <h2 *ngIf="subTotal && !includedTicketsTotal" class="price-total" id="totalAmountId">{{totalTax + subTotal | number: '2.2-2'}}</h2>
+                                            <h2 *ngIf="subTotal && includedTicketsTotal" class="price-total" id="totalAmountId">{{subTotal + totalTax + includedTicketsTotal | number: '2.2-2'}}</h2>
+                                            <h2 *ngIf="!subTotal && includedTicketsTotal" class="price-total" id="totalAmountId">{{subTotal + totalTax + includedTicketsTotal | number: '2.2-2'}}</h2>
+                                        </div>
+                                    </div>
+                                    <div class="check-profile-details">
+                                        <div class="check-profile-details-in clearfix" *ngFor='let list of ticketPaymentList'>
+
+                                            <div class="sub-item-main">
+                                                <div class="sub-item-service">
+                                                    <div class="sub-item1 text-uppercase">Payment Types</div>
+                                                    <div class="sub-item2"></div>
+                                                    <div class="sub-item3">{{list.paymentTypeName}}</div>
+                                                </div>
+                                            </div>
+                                            <div class="sub-item-main">
+                                                <div class="sub-item-service">
+                                                    <div class="sub-item1 text-uppercase">Amount Paid</div>
+                                                    <div class="sub-item2"></div>
+                                                    <div class="sub-item3"> {{list.Amount_Paid__c | number: '2.2-2'}}</div>
+                                                </div>
+                                            </div>
+                                            <div class="sub-item-main">
+                                                <div class="sub-item-service">
+                                                    <div class="sub-item1 text-uppercase">Change Back</div>
+                                                    <div class="sub-item2"></div>
+                                                    <div class="sub-item3">{{balanceDue | number: '2.2-2'}}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-20">
+                                        <h4>Created Date: {{CreatedDate[0]}} {{CreatedDate[1]}}</h4>
+                                        <h4>Last Modified Date: {{LastModifiedDate[0]}} {{LastModifiedDate[1]}}</h4>
+                                    </div>
+                                    <div class="row mt-20" *ngIf="posLists" style="color:#000">
+                                        <h4>{{posLists}}</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </body>
+
+    </html>
